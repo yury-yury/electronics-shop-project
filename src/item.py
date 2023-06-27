@@ -47,13 +47,13 @@ class Item:
             raise Exception('The length of the name attribute must be less than or equal to 10 characters.')
 
     @classmethod
-    def instantiate_from_csv(cls):
+    def instantiate_from_csv(cls) -> None:
         with open('../src/items.csv', 'r', encoding='windows-1251') as file:
             file_dict = DictReader(file)
             for row in file_dict:
                 try:
                     Item(name=row['name'], price=row['price'], quantity=row['quantity'])
-                except:
+                except Exception:
                     raise Exception('Incorrect data is received or the file is corrupted.')
 
     @staticmethod
