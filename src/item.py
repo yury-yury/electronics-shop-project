@@ -1,3 +1,6 @@
+from csv import DictReader
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -13,7 +16,7 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-        self.name = name
+        self.__name = name
         self.price = price
         self.quantity = quantity
         self.all.append(self)
@@ -31,3 +34,34 @@ class Item:
         Применяет установленную скидку для конкретного товара.
         """
         self.price *= self.pay_rate
+
+    @property
+    def name(self) -> str:
+        return self.__name
+
+    @name.setter
+    def name(self, name_: str) -> None:
+        if len(name_) <= 10:
+            self.__name = name_
+        else:
+            raise Exception('The length of the name attribute must be less than or equal to 10 characters.')
+
+    @classmethod
+    def instantiate_from_csv(cls):
+        with open('../src/items.csv', 'r', encoding='windows-1251') as file:
+            file_dict = DictReader(file)
+            for row in file_dict:
+                try:
+                    Item(name=row['name'], price=row['price'], quantity=row['quantity'])
+                except:
+                    raise Exception('Incorrect data is received or the file is corrupted.')
+
+    @staticmethod
+    def string_to_number(value: str) -> int:
+        try:
+            result = int(float(value))
+        except Exception:
+            raise Exception('The passed string must consist of digits.')
+        else:
+            return result
+
