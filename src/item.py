@@ -1,4 +1,5 @@
 from csv import DictReader
+from enum import Enum
 
 
 class Item:
@@ -75,4 +76,26 @@ class Item:
             raise Exception('The passed string must consist of digits.')
         else:
             return result
+
+
+class Language(Enum):
+    EN = 'English'
+    RU = 'Russian'
+
+
+class Keyboard(Item):
+    def __init__(self, name: str, price: float, quantity: int, language: Language = Language.EN) -> None:
+        super().__init__(name, price, quantity)
+        self._language = language
+
+    @property
+    def language(self):
+        return self._language
+
+    def change_lang(self, language: Language) -> None:
+        self._language = language
+
+
+
+
 
