@@ -27,6 +27,11 @@ class Item:
     def __str__(self) -> str:
         return f'{self.__name}'
 
+    def __add__(self, other) -> int:
+        if not isinstance(other, Item):
+            raise ValueError('You can only add Item objects and their children.')
+        return self.quantity + other.quantity
+
     def calculate_total_price(self) -> float:
         """
         Рассчитывает общую стоимость конкретного товара в магазине.
