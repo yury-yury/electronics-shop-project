@@ -43,10 +43,20 @@ def test_instantiate_from_csv() -> None:
     assert len(Item.all) == 5
     assert Item.all[0].name == 'Смартфон'
 
+
 def test_string_to_number_true() -> None:
     assert Item.string_to_number('10.00') == 10
     assert Item.string_to_number('123123123') == 123123123
 
+
 def test_string_to_number_false():
     with pytest.raises(Exception):
         Item.string_to_number('qwerty')
+
+
+def test__repr__(my_object):
+    assert repr(my_object) == "Item('test', 100, 10)"
+
+
+def test__str__(my_object):
+    assert str(my_object) == 'test'
