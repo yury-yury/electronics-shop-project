@@ -1,7 +1,6 @@
 import pytest
 
-from src.item import Item
-
+from src.item import Item, InstantiateCSVError
 
 
 @pytest.fixture
@@ -43,6 +42,15 @@ def test_instantiate_from_csv() -> None:
     Item.instantiate_from_csv()
     assert len(Item.all) == 5
     assert Item.all[0].name == 'Смартфон'
+    Item.file_name = '123'
+    with pytest.raises(FileNotFoundError) as e:
+        Item.instantiate_from_csv()
+    assert str(e.value) == f'The {Item.file_name} file is missing'
+
+    Item.file_name = '../tests/item_test.csv'
+    with pytest.raises(InstantiateCSVError) as e:
+        Item.instantiate_from_csv()
+    assert str(e.value) == 'Incorrect data is received or the file is corrupted.'
 
 
 def test_string_to_number_true() -> None:

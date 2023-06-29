@@ -8,6 +8,7 @@ class Item:
     """
     pay_rate = 1.0
     all = []
+    file_name = '../src/items.csv'
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
@@ -60,13 +61,17 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls) -> None:
-        with open('../src/items.csv', 'r', encoding='windows-1251') as file:
-            file_dict = DictReader(file)
-            for row in file_dict:
-                try:
+        try:
+            with open(f'{cls.file_name}', 'r', encoding='windows-1251') as file:
+                file_dict = DictReader(file)
+                for row in file_dict:
                     Item(name=row['name'], price=row['price'], quantity=row['quantity'])
-                except Exception:
-                    raise Exception('Incorrect data is received or the file is corrupted.')
+        except FileNotFoundError:
+            print('The item.csv file is missing')
+            raise FileNotFoundError(f'The {cls.file_name} file is missing')
+        except Exception:
+            raise InstantiateCSVError
+
 
     @staticmethod
     def string_to_number(value: str) -> int:
@@ -78,24 +83,9 @@ class Item:
             return result
 
 
-class Language(Enum):
-    EN = 'English'
-    RU = 'Russian'
+class InstantiateCSVError(Exception):
+    def __init__(self, *args, **kwargs):
+        self.message = args[0] if args else 'Incorrect data is received or the file is corrupted.'
 
-
-class Keyboard(Item):
-    def __init__(self, name: str, price: float, quantity: int, language: Language = Language.EN) -> None:
-        super().__init__(name, price, quantity)
-        self._language = language
-
-    @property
-    def language(self):
-        return self._language
-
-    def change_lang(self, language: Language) -> None:
-        self._language = language
-
-
-
-
-
+    def __str__(self):
+        return self.message
